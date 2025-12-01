@@ -1,0 +1,36 @@
+[2025-12-01 15:42:39] 404 Error - Route not found: home/index | Details: Controller not found: HomeController in any app folder
+[2025-12-01 15:42:39] 404 Error - Route not found: home/index | Details: Controller not found: HomeController in any app folder
+[2025-12-01 15:42:41] 404 Error - Route not found: home/index | Details: Controller not found: HomeController in any app folder
+[2025-12-01 15:44:27] 404 Error - Route not found: home/index | Details: Controller not found: HomeController in any app folder
+[2025-12-01 15:44:27] 404 Error - Route not found: home/index | Details: Controller not found: HomeController in any app folder
+[2025-12-01 15:44:27] 404 Error - Route not found: home/index | Details: Controller not found: HomeController in any app folder
+[2025-12-01 15:44:28] 404 Error - Route not found: home/index | Details: Controller not found: HomeController in any app folder
+[2025-12-01 15:44:30] 404 Error - Route not found: home/index | Details: Controller not found: HomeController in any app folder
+[2025-12-01 15:44:33] 404 Error - Route not found: home/index | Details: Controller not found: HomeController in any app folder
+[2025-12-01 15:44:34] 404 Error - Route not found: home/index | Details: Controller not found: HomeController in any app folder
+[2025-12-01 15:44:40] 404 Error - Route not found: home/index | Details: Controller not found: HomeController in any app folder
+[2025-12-01 15:45:38] 404 Error - Route not found:  | Details: Controller not found: UploadController in any app folder
+[2025-12-01 15:45:47] 404 Error - Route not found: home | Details: Controller not found: HomeController in any app folder
+[2025-12-01 15:45:54] 404 Error - Route not found: home/index | Details: Controller not found: HomeController in any app folder
+[2025-12-01 15:45:59] 404 Error - Route not found: home | Details: Controller not found: HomeController in any app folder
+[2025-12-01 15:55:35] 404 Error - Route not found: home | Details: Controller not found: HomeController in any app folder
+[2025-12-01 15:55:36] 404 Error - Route not found: home | Details: Controller not found: HomeController in any app folder
+[2025-12-01 16:02:16] 404 Error - Route not found: Public/images/moi.jpg | Details: Controller not found: PublicController in any app folder
+[2025-12-01 16:02:16] 404 Error - Route not found: project1.jpg | Details: Controller not found: Project1.jpgController in any app folder
+[2025-12-01 16:02:16] 404 Error - Route not found: project2.jpg | Details: Controller not found: Project2.jpgController in any app folder
+[2025-12-01 16:02:16] 404 Error - Route not found: project3.jpg | Details: Controller not found: Project3.jpgController in any app folder
+[2025-12-01 16:22:28] 404 Error - Route not found: home/project1.jpg | Details: Method 'project1.jpg' not found in app\Controllers\HomeController
+[2025-12-01 16:22:28] 404 Error - Route not found: Public/images/moi.jpg | Details: Controller not found: PublicController in any app folder
+[2025-12-01 16:22:28] 404 Error - Route not found: home/project3.jpg | Details: Method 'project3.jpg' not found in app\Controllers\HomeController
+[2025-12-01 16:22:28] 404 Error - Route not found: home/project2.jpg | Details: Method 'project2.jpg' not found in app\Controllers\HomeController
+[2025-12-01 16:23:33] 404 Error - Route not found: home/project1.jpg | Details: Method 'project1.jpg' not found in app\Controllers\HomeController
+[2025-12-01 16:23:33] 404 Error - Route not found: Public/images/moi.jpg | Details: Controller not found: PublicController in any app folder
+[2025-12-01 16:23:33] 404 Error - Route not found: home/project2.jpg | Details: Method 'project2.jpg' not found in app\Controllers\HomeController
+[2025-12-01 16:23:33] 404 Error - Route not found: home/project3.jpg | Details: Method 'project3.jpg' not found in app\Controllers\HomeController
+[2025-12-01 16:23:35] 404 Error - Route not found: Public/images/moi.jpg | Details: Controller not found: PublicController in any app folder
+[2025-12-01 16:23:35] 404 Error - Route not found: home/project1.jpg | Details: Method 'project1.jpg' not found in app\Controllers\HomeController
+[2025-12-01 16:23:35] 404 Error - Route not found: home/project2.jpg | Details: Method 'project2.jpg' not found in app\Controllers\HomeController
+[2025-12-01 16:23:35] 404 Error - Route not found: home/project3.jpg | Details: Method 'project3.jpg' not found in app\Controllers\HomeController
+[2025-12-01 16:24:54] 404 Error - Route not found: home/project1.jpg | Details: Method 'project1.jpg' not found in app\Controllers\HomeController
+[2025-12-01 16:24:54] 404 Error - Route not found: home/project3.jpg | Details: Method 'project3.jpg' not found in app\Controllers\HomeController
+[2025-12-01 16:24:54] 404 Error - Route not found: home/project2.jpg | Details: Method 'project2.jpg' not found in app\Controllers\HomeController

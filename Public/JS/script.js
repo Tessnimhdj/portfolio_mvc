@@ -1,15 +1,25 @@
 // Init animations
 AOS.init({ duration: 1000, once: true });
 
+
 // Navbar scroll effect
-window.addEventListener("scroll", () => {
-  const navbar = document.querySelector(".custom-navbar");
-  if (window.scrollY > 50) {
-    navbar.classList.add("scrolled");
+window.addEventListener("scroll", function() {
+  const navbar = document.querySelector(".navbar");
+  navbar.classList.toggle("scrolled", window.scrollY > 50);
+});
+
+
+// Language toggle (simple demo)
+document.getElementById("langToggle").addEventListener("click", function() {
+  if (this.textContent === "FR") {
+    this.textContent = "EN";
+    alert("French mode (you can later translate your content)");
   } else {
-    navbar.classList.remove("scrolled");
+    this.textContent = "FR";
+    alert("English mode");
   }
 });
+
 
 // EmailJS integration
 (function() {
