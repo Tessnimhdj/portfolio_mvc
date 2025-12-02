@@ -5,7 +5,7 @@ session_start();
 
 
 require_once __DIR__ . '/Core/routing/Router.php';
-
+require_once __DIR__ . '/Core/routing/Routes.php';
 
 spl_autoload_register(function($class){
     $class = str_replace('\\', '/', $class);

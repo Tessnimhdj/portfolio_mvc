@@ -102,7 +102,7 @@
       <!-- Image -->
       <div class="hero-img col-md-5 mt-4 mt-md-0 text-center">
         <img
-          src="/mes_projet/portfolio_mvc/Public/images/moi.jpg"
+          src="/mes_projet/portfolio_mvc/Public/images/anime.jpg"
           alt="Tessnim portrait"
           class="img-fluid rounded-circle shadow-lg border border-3 border-pink" />
       </div>
@@ -123,7 +123,7 @@
   </section>
 
   <!-- ===== PROJECTS ===== -->
-  <section id="projects" class="py-5" data-aos="fade-up">
+  <!-- <section id="projects" class="py-5" data-aos="fade-up">
     <div class="container">
       <h2 class="text-center text-gradient mb-5">My Projects</h2>
       <div class="row g-4">
@@ -167,10 +167,10 @@
         </div>
       </div>
     </div>
-  </section>
+  </section> -->
 
   <!-- ===== SKILLS ===== -->
-  <section id="skills" class="py-5 bg-light" data-aos="fade-left">
+  <!-- <section id="skills" class="py-5 bg-light" data-aos="fade-left">
     <div class="container text-center">
       <h2 class="text-gradient mb-4">Technical Skills</h2>
       <div class="row">
@@ -188,7 +188,7 @@
         </div>
       </div>
     </div>
-  </section>
+  </section> -->
 
   <!-- ===== CONTACT ===== -->
   <section id="contact" class="py-5" data-aos="fade-up">
@@ -200,22 +200,29 @@
         <input
           type="text"
           id="name"
+          name="name"
           class="form-control mb-3"
           placeholder="Your Name"
           required />
         <input
           type="email"
           id="email"
+          name="email"
           class="form-control mb-3"
           placeholder="Your Email"
           required />
         <textarea
           id="message"
+          name="message"
           class="form-control mb-3"
           rows="4"
           placeholder="Your Message"
           required></textarea>
-        <button type="submit" class="btn btn-pink">Send Message</button>
+
+        <!-- أضف reCAPTCHA Widget هنا -->
+        <div class="g-recaptcha" data-sitekey="6LeeXR8sAAAAAK-8iajzmo-xkFnMGMd19ijBTR1Y"></div>
+
+        <button type="submit" class="btn btn-pink" id="submit">Send Message</button>
         <p id="msgStatus" class="mt-3"></p>
       </form>
 
@@ -264,6 +271,40 @@
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script src="/mes_projet/portfolio_mvc/Public/JS/script.js"></script>
+
+
+
+
+  <!-- <script>
+  
+    document.getElementById('submit').addEventListener('click', function(e) {
+      e.preventDefault();
+
+      let form = document.getElementById('contactForm');
+
+      let data = new FormData(form);
+      
+      let name = data.get('name');
+      let email = data.get('email');
+      let message = data.get('message');
+
+      fetch('http://localhost/mes_projet/portfolio_mvc/x',{
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: name,
+          email: email,
+          message: message
+        })
+      }).then(response => response.text()).then(data => {
+        console.log(data);
+        
+      }).catch(error => console.error('Error:', error));
+
+    });
+  </script> -->
 </body>
 
 </html>

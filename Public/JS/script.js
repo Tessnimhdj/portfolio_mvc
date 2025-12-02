@@ -26,19 +26,40 @@ document.getElementById("langToggle").addEventListener("click", function() {
   emailjs.init("YOUR_PUBLIC_KEY"); // Replace with your EmailJS public key
 })();
 
-document.getElementById("contactForm").addEventListener("submit", function(e) {
-  e.preventDefault();
 
-  emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
-    from_name: document.getElementById("name").value,
-    from_email: document.getElementById("email").value,
-    message: document.getElementById("message").value
-  })
-  .then(() => {
-    document.getElementById("msgStatus").innerText = "Message sent successfully 💌";
-    this.reset();
-  })
-  .catch(() => {
-    document.getElementById("msgStatus").innerText = "Oops! Something went wrong 😢";
-  });
+document.getElementById('submit').addEventListener('click', function(e) {
+    e.preventDefault();
+
+    let form = document.getElementById('contactForm');
+    let data = new FormData(form);
+    
+    let name = data.get('name');
+    let email = data.get('email');
+    let message = data.get('message');
+
+    fetch('http://localhost/mes_projet/portfolio_mvc/contact/sendEmail', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: name,
+            email: email,
+            message: message
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        if (data.success) {
+            alert('تم إرسال الرسالة بنجاح!');
+            form.reset();
+        } else {
+            alert('حدث خطأ: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('حدث خطأ في الاتصال');
+    });
 });
