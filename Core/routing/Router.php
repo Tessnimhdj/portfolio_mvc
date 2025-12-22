@@ -68,18 +68,19 @@ class Router
             $methodName = lcfirst(str_replace('-', '', ucwords($methodName, '-')));
         }
 
-        // Find the Controller in all folders
-        $controllerClass = self::findController($controllerName);
+        // Find the Controller in all folders (app and services)
+        $controllerInfo = self::findController($controllerName);
 
-        if (!$controllerClass) {
-            self::show404($uri, "Controller not found: $controllerName in any app folder");
+        if (!$controllerInfo) {
+            self::show404($uri, "Controller not found: $controllerName in app or services folders");
             return;
         }
 
         // Load the Controller file
-        $controllerFile = self::resolveControllerFile($controllerClass);
+        $controllerFile = $controllerInfo['file'];
+        $controllerClass = $controllerInfo['class'];
         
-        if (!$controllerFile || !file_exists($controllerFile)) {
+        if (!file_exists($controllerFile)) {
             self::show404($uri, "Controller file not found: $controllerFile");
             return;
         }
@@ -114,19 +115,21 @@ class Router
 
             if (count($parts) === 2) {
                 list($controller, $methodName) = $parts;
-                $controllerClass = self::findController($controller);
+                $controllerInfo = self::findController($controller);
 
-                if (!$controllerClass) {
+                if (!$controllerInfo) {
                     throw new Exception("Controller not found: $controller");
                 }
+                
+                $controllerClass = $controllerInfo['class'];
+                $controllerFile = $controllerInfo['file'];
             } elseif (count($parts) === 3) {
                 list($folder, $controller, $methodName) = $parts;
                 $controllerClass = "app\\$folder\\Controllers\\$controller";
+                $controllerFile = self::resolveControllerFile($controllerClass);
             } else {
                 throw new Exception("Invalid action format: $action");
             }
-
-            $controllerFile = self::resolveControllerFile($controllerClass);
 
             if ($controllerFile && file_exists($controllerFile)) {
                 require_once $controllerFile;
@@ -148,58 +151,107 @@ class Router
         }
     }
 
-  /*  private static function findController(string $controllerName): ?string
+    /**
+     * البحث عن Controller في المجلدات (app و services)
+     * يرجع array يحتوي على class و file أو null
+     */
+    private static function findController(string $controllerName): ?array
     {
         $projectRoot = realpath(__DIR__ . '/../..');
+        $searchedPaths = []; // للتسجيل في حالة الخطأ
+        
+        // 1. البحث في مجلد app/
         $appPath = $projectRoot . '/app';
+        if (is_dir($appPath)) {
+            // البحث في المجلدات الفرعية داخل app/
+            $folders = array_filter(glob($appPath . '/*'), 'is_dir');
+            foreach ($folders as $folderPath) {
+                $folderName = basename($folderPath);
+                $controllerFile = $folderPath . '/Controllers/' . $controllerName . '.php';
+                $searchedPaths[] = $controllerFile;
 
-        if (!is_dir($appPath)) {
-            return null;
-        }
+                if (file_exists($controllerFile)) {
+                    return [
+                        'class' => "app\\$folderName\\Controllers\\$controllerName",
+                        'file' => $controllerFile
+                    ];
+                }
+            }
 
-        $folders = array_filter(glob($appPath . '/*'), 'is_dir');
-
-        foreach ($folders as $folderPath) {
-            $folderName = basename($folderPath);
-            $controllerFile = $folderPath . '/Controllers/' . $controllerName . '.php';
-
-            if (file_exists($controllerFile)) {
-                return "app\\$folderName\\Controllers\\$controllerName";
+            // البحث مباشرة في app/Controllers
+            $directControllerFile = $appPath . '/Controllers/' . $controllerName . '.php';
+            $searchedPaths[] = $directControllerFile;
+            if (file_exists($directControllerFile)) {
+                return [
+                    'class' => "app\\Controllers\\$controllerName",
+                    'file' => $directControllerFile
+                ];
             }
         }
 
-        return null;
-    }*/
+        // 2. البحث في مجلد services/
+        $servicesPath = $projectRoot . '/services';
+        if (is_dir($servicesPath)) {
+            // البحث مباشرة في services/ (الملفات في الجذر)
+            $directRootServiceFile = $servicesPath . '/' . $controllerName . '.php';
+            $searchedPaths[] = $directRootServiceFile;
+            if (file_exists($directRootServiceFile)) {
+                return [
+                    'class' => "services\\$controllerName",
+                    'file' => $directRootServiceFile
+                ];
+            }
 
+            // البحث في المجلدات الفرعية داخل services/
+            $serviceFolders = array_filter(glob($servicesPath . '/*'), 'is_dir');
+            foreach ($serviceFolders as $folderPath) {
+                $folderName = basename($folderPath);
+                $controllerFile = $folderPath . '/Controllers/' . $controllerName . '.php';
+                $searchedPaths[] = $controllerFile;
 
-        private static function findController(string $controllerName): ?string
-{
-    $projectRoot = realpath(__DIR__ . '/../..');
-    $appPath = $projectRoot . '/app';
+                if (file_exists($controllerFile)) {
+                    return [
+                        'class' => "services\\$folderName\\Controllers\\$controllerName",
+                        'file' => $controllerFile
+                    ];
+                }
+            }
 
-    if (!is_dir($appPath)) {
-        return null;
-    }
-
-    // أولاً: ابحث في المجلدات الفرعية
-    $folders = array_filter(glob($appPath . '/*'), 'is_dir');
-    foreach ($folders as $folderPath) {
-        $folderName = basename($folderPath);
-        $controllerFile = $folderPath . '/Controllers/' . $controllerName . '.php';
-
-        if (file_exists($controllerFile)) {
-            return "app\\$folderName\\Controllers\\$controllerName";
+            // البحث مباشرة في services/Controllers
+            $directServiceControllerFile = $servicesPath . '/Controllers/' . $controllerName . '.php';
+            $searchedPaths[] = $directServiceControllerFile;
+            if (file_exists($directServiceControllerFile)) {
+                return [
+                    'class' => "services\\Controllers\\$controllerName",
+                    'file' => $directServiceControllerFile
+                ];
+            }
         }
+
+        // تسجيل المسارات التي تم البحث فيها
+        self::logSearchedPaths($controllerName, $searchedPaths);
+
+        return null;
     }
 
-    // ثانياً: ابحث مباشرة في app/Controllers
-    $directControllerFile = $appPath . '/Controllers/' . $controllerName . '.php';
-    if (file_exists($directControllerFile)) {
-        return "app\\Controllers\\$controllerName";
-    }
+    /**
+     * تسجيل المسارات التي تم البحث فيها
+     */
+    private static function logSearchedPaths(string $controllerName, array $paths)
+    {
+        $logFile = __DIR__ . '/../logs/errors.log';
+        if (!file_exists(dirname($logFile))) {
+            mkdir(dirname($logFile), 0777, true);
+        }
 
-    return null;
-}
+        $logMessage = "[" . date('Y-m-d H:i:s') . "] Searching for $controllerName in:\n";
+        foreach ($paths as $path) {
+            $exists = file_exists($path) ? 'EXISTS' : 'NOT FOUND';
+            $logMessage .= "  - [$exists] $path\n";
+        }
+
+        file_put_contents($logFile, $logMessage . PHP_EOL, FILE_APPEND);
+    }
 
     private static function normalizeUri($uri)
     {
@@ -223,13 +275,13 @@ class Router
         return $full;
     }
 
-private static function show404(string $uri, string $message = null)
-{
-    // Send 404 HTTP code to the user
-    http_response_code(404);
+    private static function show404(string $uri, string $message = null)
+    {
+        // Send 404 HTTP code to the user
+        http_response_code(404);
 
-    // Simple display for the user
-    echo "<!DOCTYPE html>
+        // Simple display for the user
+        echo "<!DOCTYPE html>
 <html lang='ar'>
 <head>
     <meta charset='UTF-8'>
@@ -267,20 +319,19 @@ private static function show404(string $uri, string $message = null)
 </body>
 </html>";
 
-    // Automatically create log file inside the project folder
-    $logFile = __DIR__ . '/../logs/errors.log'; // You can modify the path according to the project
-    if (!file_exists(dirname($logFile))) {
-        mkdir(dirname($logFile), 0777, true); // Create logs folder if it doesn't exist
+        // Automatically create log file inside the project folder
+        $logFile = __DIR__ . '/../logs/errors.log';
+        if (!file_exists(dirname($logFile))) {
+            mkdir(dirname($logFile), 0777, true);
+        }
+
+        // Prepare the error message with details
+        $logMessage  = "[" . date('Y-m-d H:i:s') . "] 404 Error - Route not found: $uri";
+        if ($message) {
+            $logMessage .= " | Details: $message";
+        }
+
+        // Write the message to the log file
+        file_put_contents($logFile, $logMessage . PHP_EOL, FILE_APPEND);
     }
-
-    // Prepare the error message with details
-    $logMessage  = "[" . date('Y-m-d H:i:s') . "] 404 Error - Route not found: $uri";
-    if ($message) {
-        $logMessage .= " | Details: $message";
-    }
-
-    // Write the message to the log file
-    file_put_contents($logFile, $logMessage . PHP_EOL, FILE_APPEND);
-}
-
 }

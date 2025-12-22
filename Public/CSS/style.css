@@ -251,3 +251,21 @@ section {
   transform: scale(1.08);
   box-shadow: 0 0 40px rgba(255, 153, 204, 0.8);
 }
+
+.recaptcha-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+/* للشاشات الصغيرة */
+@media (max-width: 576px) {
+    .recaptcha-wrapper {
+        transform: scale(0.85);
+        transform-origin: center;
+    }
+}

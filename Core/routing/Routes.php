@@ -1,3 +1,3 @@
 <?php
 
-Router::post('/x', 'ContactController');
+Router::post('/', 'Controller');

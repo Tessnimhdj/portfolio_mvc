@@ -3,3 +3,11 @@ node_modules/
 .env
 .DS_Store
 Core/logs/
+
+# Sensitive config files
+Services/**/**.config.php
+Services/**/**.secret.php
+
+# Mail & Recaptcha real configs
+Services/Recaptcha/recaptcha.config.php
+Services/Mail/mail.config.php

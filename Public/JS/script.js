@@ -21,12 +21,9 @@ document.getElementById("langToggle").addEventListener("click", function() {
 });
 
 
-// EmailJS integration
-(function() {
-  emailjs.init("YOUR_PUBLIC_KEY"); // Replace with your EmailJS public key
-})();
-
-
+// ============================================
+// 🔒 نموذج الاتصال مع reCAPTCHA
+// ============================================
 document.getElementById('submit').addEventListener('click', function(e) {
     e.preventDefault();
 
@@ -36,8 +33,32 @@ document.getElementById('submit').addEventListener('click', function(e) {
     let name = data.get('name');
     let email = data.get('email');
     let message = data.get('message');
+    
+    // التحقق من البيانات
+    if (!name || !email || !message) {
+        alert('⚠️ الرجاء ملء جميع الحقول');
+        return;
+    }
+    
+    // ✅ الحصول على توكن reCAPTCHA
+    let recaptchaToken = grecaptcha.getResponse();
+    
+    // ✅ التحقق من أن المستخدم حل الكابتشا
+    if (!recaptchaToken) {
+        alert('⚠️ يرجى إكمال التحقق من reCAPTCHA أولاً');
+        return;
+    }
+    
+    // تعطيل زر الإرسال أثناء المعالجة
+    let submitBtn = document.getElementById('submit');
+    let originalText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = '⏳ جاري الإرسال...';
 
-    fetch('http://localhost/mes_projet/portfolio_mvc/contact/sendEmail', {
+    // ✅ إرسال البيانات مع التوكن
+    // المسار المباشر للملف في services
+    fetch('/mes_projet/portfolio_mvc/services/ContactController.php', {
+    // fetch('http://localhost/mes_projet/portfolio_mvc/services/ContactController.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -45,21 +66,39 @@ document.getElementById('submit').addEventListener('click', function(e) {
         body: JSON.stringify({
             name: name,
             email: email,
-            message: message
+            message: message,
+            recaptcha_token: recaptchaToken
         })
     })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-        if (data.success) {
-            alert('تم إرسال الرسالة بنجاح!');
-            form.reset();
-        } else {
-            alert('حدث خطأ: ' + data.message);
+    .then(response => {
+        // التحقق من أن الاستجابة صحيحة
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
         }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Response:', data);
+        if (data.success) {
+            alert('✅ تم إرسال الرسالة بنجاح!');
+            form.reset();
+            grecaptcha.reset();
+        } else {
+            alert('❌ حدث خطأ: ' + data.message);
+            grecaptcha.reset();
+        }
+        
+        // إعادة تفعيل الزر
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('حدث خطأ في الاتصال');
+        alert('❌ حدث خطأ في الاتصال. تأكد من أن الخادم يعمل.');
+        grecaptcha.reset();
+        
+        // إعادة تفعيل الزر
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
     });
 });

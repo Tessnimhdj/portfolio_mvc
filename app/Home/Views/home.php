@@ -19,6 +19,7 @@
   <!-- Custom CSS -->
   <link rel="stylesheet" href="/mes_projet/portfolio_mvc/Public/CSS/style.css" />
 
+  <script src="https://www.google.com/recaptcha/api.js?hl=ar" async defer></script>
 </head>
 
 <body>
@@ -219,8 +220,14 @@
           placeholder="Your Message"
           required></textarea>
 
-        <!-- أضف reCAPTCHA Widget هنا -->
-        <div class="g-recaptcha" data-sitekey="6LeeXR8sAAAAAK-8iajzmo-xkFnMGMd19ijBTR1Y"></div>
+        <!--   reCAPTCHA Widget   -->
+        <div style="display: flex; justify-content: center; margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+          <div class="g-recaptcha"
+            data-sitekey="6Le-AiQsAAAAAIxzVQ9HWlMxv35Hqe_GYMiILt_8"
+            data-theme="light">
+          </div>
+        </div>
+        <!-- End reCAPTCHA Widget -->
 
         <button type="submit" class="btn btn-pink" id="submit">Send Message</button>
         <p id="msgStatus" class="mt-3"></p>
@@ -273,38 +280,6 @@
   <script src="/mes_projet/portfolio_mvc/Public/JS/script.js"></script>
 
 
-
-
-  <!-- <script>
-  
-    document.getElementById('submit').addEventListener('click', function(e) {
-      e.preventDefault();
-
-      let form = document.getElementById('contactForm');
-
-      let data = new FormData(form);
-      
-      let name = data.get('name');
-      let email = data.get('email');
-      let message = data.get('message');
-
-      fetch('http://localhost/mes_projet/portfolio_mvc/x',{
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          name: name,
-          email: email,
-          message: message
-        })
-      }).then(response => response.text()).then(data => {
-        console.log(data);
-        
-      }).catch(error => console.error('Error:', error));
-
-    });
-  </script> -->
 </body>
 
 </html>
