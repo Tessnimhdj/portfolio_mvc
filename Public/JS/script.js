@@ -1,104 +1,91 @@
-// Init animations
-AOS.init({ duration: 1000, once: true });
+if (typeof AOS !== "undefined") {
+  AOS.init({ duration: 1000, once: true });
+}
 
+if (window.location.hash) {
+  history.replaceState(null, "", window.location.pathname + window.location.search);
+}
 
-// Navbar scroll effect
-window.addEventListener("scroll", function() {
-  const navbar = document.querySelector(".navbar");
-  navbar.classList.toggle("scrolled", window.scrollY > 50);
+document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+  link.addEventListener("click", function (event) {
+    const id = this.getAttribute("href").slice(1);
+    const target = document.getElementById(id);
+    if (!target) {
+      return;
+    }
+    event.preventDefault();
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
 });
 
-
-// Language toggle (simple demo)
-document.getElementById("langToggle").addEventListener("click", function() {
-  if (this.textContent === "FR") {
-    this.textContent = "EN";
-    alert("French mode (you can later translate your content)");
-  } else {
-    this.textContent = "FR";
-    alert("English mode");
+window.addEventListener("scroll", function () {
+  const navbar = document.querySelector(".navbar");
+  if (navbar) {
+    navbar.classList.toggle("scrolled", window.scrollY > 50);
   }
 });
 
+const submitBtn = document.getElementById("submit");
+if (submitBtn) {
+  submitBtn.addEventListener("click", function (event) {
+    event.preventDefault();
 
-// ============================================
-// 🔒 نموذج الاتصال مع reCAPTCHA
-// ============================================
-document.getElementById('submit').addEventListener('click', function(e) {
-    e.preventDefault();
+    const form = document.getElementById("contactForm");
+    const data = new FormData(form);
+    const name = data.get("name");
+    const email = data.get("email");
+    const message = data.get("message");
+    const t = (key) => (window.I18N ? window.I18N.t(key) : key);
 
-    let form = document.getElementById('contactForm');
-    let data = new FormData(form);
-    
-    let name = data.get('name');
-    let email = data.get('email');
-    let message = data.get('message');
-    
-    // التحقق من البيانات
     if (!name || !email || !message) {
-        alert('⚠️ الرجاء ملء جميع الحقول');
-        return;
+      alert(t("contact.required"));
+      return;
     }
-    
-    // ✅ الحصول على توكن reCAPTCHA
-    let recaptchaToken = grecaptcha.getResponse();
-    
-    // ✅ التحقق من أن المستخدم حل الكابتشا
-    if (!recaptchaToken) {
-        alert('⚠️ يرجى إكمال التحقق من reCAPTCHA أولاً');
-        return;
-    }
-    
-    // تعطيل زر الإرسال أثناء المعالجة
-    let submitBtn = document.getElementById('submit');
-    let originalText = submitBtn.textContent;
-    submitBtn.disabled = true;
-    submitBtn.textContent = '⏳ جاري الإرسال...';
 
-    // ✅ إرسال البيانات مع التوكن
-    // المسار المباشر للملف في services
-    fetch('/mes_projet/portfolio_mvc/services/ContactController.php', {
-    // fetch('http://localhost/mes_projet/portfolio_mvc/services/ContactController.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            name: name,
-            email: email,
-            message: message,
-            recaptcha_token: recaptchaToken
-        })
+    const recaptchaToken = grecaptcha.getResponse();
+    if (!recaptchaToken) {
+      alert(t("contact.captcha"));
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = t("contact.sending");
+
+    fetch("/mes_projet/portfolio_mvc/services/ContactController.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: name,
+        email: email,
+        message: message,
+        recaptcha_token: recaptchaToken,
+      }),
     })
-    .then(response => {
-        // التحقق من أن الاستجابة صحيحة
+      .then((response) => {
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
         return response.json();
-    })
-    .then(data => {
-        console.log('Response:', data);
-        if (data.success) {
-            alert('✅ تم إرسال الرسالة بنجاح!');
-            form.reset();
-            grecaptcha.reset();
+      })
+      .then((result) => {
+        if (result.success) {
+          alert(t("contact.success"));
+          form.reset();
+          grecaptcha.reset();
         } else {
-            alert('❌ حدث خطأ: ' + data.message);
-            grecaptcha.reset();
+          alert(t("contact.error") + result.message);
+          grecaptcha.reset();
         }
-        
-        // إعادة تفعيل الزر
         submitBtn.disabled = false;
-        submitBtn.textContent = originalText;
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('❌ حدث خطأ في الاتصال. تأكد من أن الخادم يعمل.');
+        submitBtn.textContent = t("contact.send");
+      })
+      .catch(() => {
+        alert(t("contact.network"));
         grecaptcha.reset();
-        
-        // إعادة تفعيل الزر
         submitBtn.disabled = false;
-        submitBtn.textContent = originalText;
-    });
-});
+        submitBtn.textContent = t("contact.send");
+      });
+  });
+}

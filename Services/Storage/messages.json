@@ -1,0 +1,27 @@
+[
+    {
+        "id": 1,
+        "name": "Sara Benali",
+        "email": "sara.benali@example.com",
+        "message": "Bonjour Tessnim, j'ai visité votre portfolio et je voudrais discuter d'une mission freelance en Laravel.",
+        "status": "unread",
+        "created_at": "2026-09-28 16:22:00"
+    },
+    {
+        "id": 2,
+        "name": "Karim Haddad",
+        "email": "karim.haddad@example.com",
+        "message": "Hello, we are hiring a junior web developer. Are you available for an interview next week?",
+        "status": "read",
+        "created_at": "2026-09-25 09:41:00",
+        "updated_at": "2026-10-01 23:45:15"
+    },
+    {
+        "id": 3,
+        "name": "Lina Moussa",
+        "email": "lina.moussa@example.com",
+        "message": "Merci pour vos projets, j'aimerais en savoir plus sur le stack PHP MVC que vous utilisez.",
+        "status": "read",
+        "created_at": "2026-09-18 13:08:00"
+    }
+]

@@ -19,11 +19,11 @@ class RecaptchaService
     }
 
     /**
-     * التحقق من استجابة reCAPTCHA
-     * 
-     * @param string $response الرمز المرسل من النموذج
-     * @param string|null $remoteIp عنوان IP الخاص بالمستخدم (اختياري)
-     * @return array نتيجة التحقق
+     * Verify the reCAPTCHA response.
+     *
+     * @param string $response Token sent from the form
+     * @param string|null $remoteIp User IP address (optional)
+     * @return array Verification result
      */
     public function verify($response, $remoteIp = null)
     {
@@ -88,8 +88,8 @@ class RecaptchaService
     }
 
     /**
-     * التحقق السريع - يرجع true أو false فقط
-     * 
+     * Quick check: returns true or false only.
+     *
      * @param string $response
      * @param string|null $remoteIp
      * @return bool
@@ -101,8 +101,8 @@ class RecaptchaService
     }
 
     /**
-     * الحصول على Site Key
-     * 
+     * Get the site key.
+     *
      * @return string
      */
     public function getSiteKey()
@@ -111,10 +111,10 @@ class RecaptchaService
     }
 
     /**
-     * التحقق مع حد أدنى للنقاط (لـ reCAPTCHA v3)
-     * 
+     * Verify with a minimum score (reCAPTCHA v3).
+     *
      * @param string $response
-     * @param float $minScore الحد الأدنى المقبول (0.0 إلى 1.0)
+     * @param float $minScore Minimum accepted score (0.0 to 1.0)
      * @param string|null $remoteIp
      * @return array
      */

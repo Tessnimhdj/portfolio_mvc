@@ -22,9 +22,9 @@ class RecaptchaHelper
     }
 
     /**
-     * عرض سكريبت reCAPTCHA
-     * 
-     * @param string|null $language اللغة (ar, en, fr, إلخ)
+     * Render the reCAPTCHA script.
+     *
+     * @param string|null $language Language (ar, en, fr, etc.)
      * @return string
      */
     public function renderScript($language = null)
@@ -42,9 +42,9 @@ class RecaptchaHelper
     }
 
     /**
-     * عرض الـ div الخاص بـ reCAPTCHA v2
-     * 
-     * @param array $options خيارات إضافية
+     * Render the reCAPTCHA v2 widget.
+     *
+     * @param array $options Extra options
      * @return string
      */
     public function renderV2($options = [])
@@ -82,10 +82,10 @@ class RecaptchaHelper
     }
 
     /**
-     * عرض سكريبت reCAPTCHA v3
-     * 
-     * @param string $action اسم الإجراء (login, register, contact, إلخ)
-     * @param string $formId معرف النموذج
+     * Render the reCAPTCHA v3 script.
+     *
+     * @param string $action Action name (login, register, contact, etc.)
+     * @param string $formId Form id
      * @return string
      */
     public function renderV3($action, $formId)
@@ -96,14 +96,14 @@ class RecaptchaHelper
         document.getElementById('{$formId}').addEventListener('submit', function(e) {
             e.preventDefault();
             grecaptcha.execute('{$this->siteKey}', {action: '{$action}'}).then(function(token) {
-                // إضافة التوكن إلى النموذج
+                // Add the token to the form
                 var input = document.createElement('input');
                 input.type = 'hidden';
                 input.name = 'g-recaptcha-response';
                 input.value = token;
                 document.getElementById('{$formId}').appendChild(input);
                 
-                // إرسال النموذج
+                // Submit the form
                 document.getElementById('{$formId}').submit();
             });
         });
@@ -112,8 +112,8 @@ class RecaptchaHelper
     }
 
     /**
-     * عرض reCAPTCHA الكامل مع السكريبت
-     * 
+     * Render full reCAPTCHA with the script.
+     *
      * @param array $options
      * @return string
      */
@@ -134,9 +134,9 @@ class RecaptchaHelper
     }
 
     /**
-     * عرض Invisible reCAPTCHA
-     * 
-     * @param string $buttonId معرف زر الإرسال
+     * Render invisible reCAPTCHA.
+     *
+     * @param string $buttonId Submit button id
      * @param array $options
      * @return string
      */
@@ -158,8 +158,8 @@ function {$callback}(token) {
     }
 
     /**
-     * الحصول على Site Key
-     * 
+     * Get the site key.
+     *
      * @return string
      */
     public function getSiteKey()
@@ -168,8 +168,8 @@ function {$callback}(token) {
     }
 
     /**
-     * الحصول على الإصدار
-     * 
+     * Get the version.
+     *
      * @return string
      */
     public function getVersion()

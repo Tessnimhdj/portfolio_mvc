@@ -11,3 +11,11 @@ Services/**/**.secret.php
 # Mail & Recaptcha real configs
 Services/Recaptcha/recaptcha.config.php
 Services/Mail/mail.config.php
+
+
+test_router.php
+Public/check_errors.php
+Public/admin.php
+
+Core/logs/*
+!Core/logs/.gitkeep
