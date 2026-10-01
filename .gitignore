@@ -19,3 +19,6 @@ Public/admin.php
 
 Core/logs/*
 !Core/logs/.gitkeep
+
+Services/co.php
+Services/Storage/admin.json
